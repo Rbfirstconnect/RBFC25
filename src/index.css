@@ -1,0 +1,195 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #FF6900;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #e65e00;
+}
+
+/* Smooth scrolling for the entire page */
+html {
+  scroll-behavior: smooth;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap');
+
+.funky-text {
+  font-family: 'Caveat', cursive;
+  font-weight: 700;
+  background: linear-gradient(45deg, #FF0066, #FF9933, #FFCC00, #33CC33, #3366FF);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient 4s ease infinite;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.fireworks-container {
+  animation: fadeIn 0.3s ease-in, fadeOut 0.3s ease-out 3.7s;
+}
+
+@keyframes wobble {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.wobble {
+  animation: wobble 0.5s ease-in-out;
+}
+
+/* Water Splash Animation */
+.water-burst {
+  position: absolute;
+  width: 100vmin;
+  height: 100vmin;
+  background: radial-gradient(circle, rgba(255, 105, 0, 0.8) 0%, rgba(255, 105, 0, 0) 70%);
+  filter: url(#turbulence);
+  animation: burst 0.5s ease-out forwards;
+  transform-origin: center;
+}
+
+@keyframes burst {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+.water-text {
+  font-size: min(15vw, 15vh);
+  font-weight: bold;
+  color: #FF6900;
+  filter: url(#liquid);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: formText 1.5s ease-out forwards;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes formText {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+    filter: blur(10px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+  80% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.9);
+  }
+}
+
+.water-drips {
+  position: absolute;
+  width: 100%;
+  height: 400vh;
+  overflow: hidden;
+  animation: scrollDrips 15s linear infinite;
+}
+
+@keyframes scrollDrips {
+  from { transform: translateY(-100vh); }
+  to { transform: translateY(0); }
+}
+
+.drip {
+  position: absolute;
+  width: min(1.2vw, 8px);
+  height: min(25vh, 200px);
+  background: linear-gradient(to bottom, 
+    rgba(255, 105, 0, 1),
+    rgba(255, 105, 0, 0.9) 20%,
+    rgba(255, 105, 0, 0.7) 60%,
+    rgba(255, 105, 0, 0.4) 80%,
+    rgba(255, 105, 0, 0)
+  );
+  border-radius: 100% 100% 0 0;
+  filter: blur(1px);
+  animation: drip 4s linear infinite;
+  transform-origin: top;
+  will-change: transform, opacity;
+  box-shadow: 0 0 8px rgba(255, 105, 0, 0.3);
+}
+
+@keyframes drip {
+  0% {
+    transform: translateY(0) scaleY(0.3);
+    opacity: 0.8;
+  }
+  20% {
+    transform: translateY(20vh) scaleY(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(50vh) scaleY(1.5);
+    opacity: 0.9;
+  }
+  80% {
+    transform: translateY(80vh) scaleY(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(120vh) scaleY(0.8);
+    opacity: 0;
+  }
+}
+
+/* Fullscreen animation container */
+.water-animation-container {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 9999;
+  pointer-events: none;
+}
