@@ -28,6 +28,7 @@ function App() {
   const [selectedUser, setSelectedUser] = useState<string>('all');
   const [dateFilter, setDateFilter] = useState({ start: '', end: '' });
   const [statusFilter, setStatusFilter] = useState<'all' | 'eligible' | 'not-eligible'>('all');
+  const [checkedByFilter, setCheckedByFilter] = useState<string>('all');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [lookupHistory, setLookupHistory] = useState<Array<{
     id?: string;
@@ -433,14 +434,15 @@ function App() {
                   </div>
                   <div className="mb-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Filter by User</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Checked By</label>
                       <select
-                        value={selectedUser}
-                        onChange={(e) => setSelectedUser(e.target.value)}
+                        value={checkedByFilter}
+                        onChange={(e) => setCheckedByFilter(e.target.value)}
                         className="w-full px-4 py-2 rounded-lg border-2 border-orange-200 focus:ring-2 focus:ring-[#FF6900] focus:border-transparent outline-none appearance-none bg-[url('data:image/svg+xml;charset=utf-8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><path fill=%22%23FF6900%22 d=%22M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z%22/></svg>')] bg-[length:1.5em_1.5em] bg-[right_0.5rem_center] bg-no-repeat pr-12"
                       >
-                        {users.map(user => (
-                          <option key={user.id} value={user.id}>{user.name}</option>
+                        <option value="all">All Users</option>
+                        {Array.from(new Set(lookupHistory.map(entry => entry.checkedBy))).map(checker => (
+                          <option key={checker} value={checker}>{checker}</option>
                         ))}
                       </select>
                     </div>
@@ -488,11 +490,11 @@ function App() {
                       </thead>
                       <tbody className="bg-white divide-y divide-orange-100">
                         {lookupHistory
-                          .filter(entry => selectedUser === 'all' || entry.userId === selectedUser)
                           .filter(entry => {
                             if (statusFilter === 'all') return true;
                             return statusFilter === 'eligible' ? entry.isEligible : !entry.isEligible;
                           })
+                          .filter(entry => checkedByFilter === 'all' || entry.checkedBy === checkedByFilter)
                           .filter(entry => {
                             const date = new Date(entry.timestamp);
                             const start = dateFilter.start ? new Date(dateFilter.start) : null;
