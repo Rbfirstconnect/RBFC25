@@ -25,6 +25,7 @@ function App() {
   const [showFireworks, setShowFireworks] = useState(false);
   const [showIneligibleAnimation, setShowIneligibleAnimation] = useState(false);
   const [showEmojiError, setShowEmojiError] = useState(false);
+  const [showThankYou, setShowThankYou] = useState(false);
   const [selectedUser, setSelectedUser] = useState<string>('all');
   const [dateFilter, setDateFilter] = useState({ start: '', end: '' });
   const [statusFilter, setStatusFilter] = useState<'all' | 'eligible' | 'not-eligible'>('all');
@@ -329,7 +330,9 @@ function App() {
               {hasSearched && (
                 <div className={`mt-6 p-4 rounded-lg flex items-center ${
                   eligibilityResult.isEligible ? 'bg-green-50 border-2 border-green-200' : 'bg-red-50 border-2 border-red-200'
-                } ${showIneligibleAnimation ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
+                } ${showIneligibleAnimation ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300 cursor-pointer hover:shadow-lg hover:scale-[1.02] transform transition-all`}
+                  onClick={() => eligibilityResult.isEligible && setShowThankYou(true)}
+                >
                   {eligibilityResult.isEligible && eligibilityResult.customerInfo ? (
                     <>
                       <CheckCircle className="w-6 h-6 text-green-600 mr-3" />
@@ -364,6 +367,43 @@ function App() {
                       </div>
                     </>
                   )}
+                </div>
+              )}
+              
+              {/* Thank You Modal */}
+              {showThankYou && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                  <div className="bg-white p-8 rounded-xl shadow-xl max-w-md w-full mx-4 transform animate-[slideIn_0.3s_ease-out]">
+                    <div className="text-center">
+                      <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <CheckCircle className="w-8 h-8 text-green-600" />
+                      </div>
+                      <h3 className="text-2xl font-bold text-gray-900 mb-4">Congratulations!</h3>
+                      <div className="text-left bg-green-50 p-4 rounded-lg border-2 border-green-200 mb-6">
+                        <p className="font-medium text-green-800 mb-2">Your customer is eligible for:</p>
+                        <ol className="space-y-2 text-gray-700">
+                          <li className="flex items-center gap-2">
+                            <span className="text-[#FF6900] font-bold">1)</span>
+                            $25 off the Activation fee on add a line
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <span className="text-[#FF6900] font-bold">2)</span>
+                            25% off on any Bluetooth speaker
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <span className="text-[#FF6900] font-bold">3)</span>
+                            $25 off on tire 3 and tier 4 accessory bundle
+                          </li>
+                        </ol>
+                      </div>
+                      <button
+                        onClick={() => setShowThankYou(false)}
+                        className="bg-[#FF6900] text-white px-6 py-2 rounded-lg hover:bg-[#e65e00] transition-all"
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
                 </div>
               )}
               
