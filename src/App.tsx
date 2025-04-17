@@ -384,7 +384,7 @@ function App() {
                         <ol className="space-y-2 text-gray-700">
                           <li className="flex items-center gap-2">
                             <span className="text-[#FF6900] font-bold">1)</span>
-                            $25 off the Activation fee on add a line
+                            upto $25 off the Activation fee on add a line
                           </li>
                           <li className="flex items-center gap-2">
                             <span className="text-[#FF6900] font-bold">2)</span>
