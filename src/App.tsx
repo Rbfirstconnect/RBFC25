@@ -330,7 +330,7 @@ function App() {
               {hasSearched && (
                 <div className={`mt-6 p-4 rounded-lg flex items-center ${
                   eligibilityResult.isEligible ? 'bg-green-50 border-2 border-green-200' : 'bg-red-50 border-2 border-red-200'
-                } ${showIneligibleAnimation ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300 cursor-pointer hover:shadow-lg hover:scale-[1.02] transform transition-all`}
+                } ${showIneligibleAnimation ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300 cursor-pointer`}
                   onClick={() => eligibilityResult.isEligible && setShowThankYou(true)}
                 >
                   {eligibilityResult.isEligible && eligibilityResult.customerInfo ? (
