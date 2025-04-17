@@ -7366,15 +7366,3 @@ export const getAllEligibleCustomers = () => {
       };
     });
 };
-      customerInfo: customer
-    };
-  }
-  
-  return {
-    isEligible: false
-  };
-}
-
-export function getAllEligibleCustomers(): Customer[] {
-  return eligibleCustomers;
-}
