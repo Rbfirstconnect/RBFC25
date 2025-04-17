@@ -1,15 +1,32 @@
-// Mock data for eligible customers
-interface Customer {
-  phoneNumber: string;
+// Export customer data type
+export type CustomerData = {
   name: string;
   storeName: string;
   activationDate: string;
+  secondMRCDate: string;
+  expirationDate: string;
   currentPlan: string;
-  monthlySavings: number;
-  yearlySavings: number;
-}
+  originalPlan: string;
+  currentPrice: number;
+  phoneNumber: string;
+};
 
-const eligibleCustomers: Customer[] = [
+export type EligibilityResult = {
+  isEligible: boolean;
+  customerInfo?: {
+    name: string;
+    storeName: string;
+    activationDate: string;
+    secondMRCDate: string;
+    expirationDate: string;
+    currentPlan: string;
+    monthlySavings: number;
+    yearlySavings: number;
+  };
+};
+
+// Store customer data with phone numbers as keys
+const customerData: Record<string, CustomerData> = {
   '7249201785': { phoneNumber: '7249201785', storeName: 'PA- Washington', activationDate: '02/28/2025', currentPlan: '$55' },
   '4633151292': { phoneNumber: '4633151292', storeName: 'PA- Washington', activationDate: '02/28/2025', currentPlan: 'Unlimited+' },
   '4633151289': { phoneNumber: '4633151289', storeName: 'PA-State', activationDate: '02/28/2025', currentPlan: 'Unlimited+' },
@@ -7232,24 +7249,123 @@ const eligibleCustomers: Customer[] = [
   '2702435015': { phoneNumber: '2702435015', storeName: 'PA-Monroeville', activationDate: '12/05/2024', currentPlan: 'Infinite Access For  iPhone' },
   '5676241706': { phoneNumber: '5676241706', storeName: 'SC-Saluda', activationDate: '12/05/2024', currentPlan: '$55' },
   '3305404810': { phoneNumber: '3305404810', storeName: 'PA-New Castle', activationDate: '12/05/2024', currentPlan: '$55' },
-  // Add more mock data as needed
-];
+ };
 
-export interface EligibilityResult {
-  isEligible: boolean;
-  customerInfo?: Customer;
-}
+/**
+ * Standardizes plan names according to business rules
+ * @param planName Original plan name
+ * @returns Standardized plan name
+ */
+const standardizePlanName = (planName: string): string => {
+  // Premium/Enhanced Plans
+  if (planName === 'Unlimited+' || planName === 'Unlimited Premium') {
+    return '$65 plan';
+  }
+  
+  // Standard Plans
+  if (planName.includes('$40 Unlimited Talk & Text')) {
+    return '$40 plan';
+  }
+  if (planName.includes('$50 Unlimited Data')) {
+    return '$50 plan';
+  }
+  if (planName.includes('$60 Unlimited Data')) {
+    return '$60 plan';
+  }
+  
+  return planName;
+};
 
-export function checkEligibility(phoneNumber: string): EligibilityResult {
-  // Remove any non-digit characters from the phone number
-  const cleanPhoneNumber = phoneNumber.replace(/\D/g, '');
+/**
+ * Gets the standardized price for a plan
+ * @param planName Original plan name
+ * @returns Standardized price
+ */
+const getStandardizedPrice = (planName: string): number => {
+  // Premium/Enhanced Plans
+  if (planName === 'Unlimited+' || planName === 'Unlimited Premium') {
+    return 65;
+  }
   
-  // Check if the phone number exists in our eligible customers list
-  const customer = eligibleCustomers.find(c => c.phoneNumber === cleanPhoneNumber);
+  // Standard Plans
+  if (planName.includes('$40 Unlimited Talk & Text')) {
+    return 40;
+  }
+  if (planName.includes('$50 Unlimited Data')) {
+    return 50;
+  }
+  if (planName.includes('$60 Unlimited Data')) {
+    return 60;
+  }
   
+  // Extract numeric price if available
+  const priceMatch = planName.match(/\$(\d+)/);
+  if (priceMatch) {
+    return parseInt(priceMatch[1], 10);
+  }
+  
+  return 60; // Default price if no match found
+};
+
+/**
+ * Checks if a customer is eligible for a promotional offer
+ * @param phoneNumber The customer's phone number
+ * @param newPlanPrice The price of the new plan offer (defaults to 25)
+ * @returns An object containing eligibility status and customer info
+ */
+export const checkEligibility = (phoneNumber: string): EligibilityResult => {
+  const newPlanPrice = 25; // Set default new plan price
+  
+  // Clean up phone number input (remove spaces, dashes, etc)
+  const cleanNumber = phoneNumber.replace(/\D/g, '');
+  const customer = customerData[cleanNumber];
+
   if (customer) {
+    const standardizedPrice = getStandardizedPrice(customer.currentPlan);
+    const standardizedPlan = standardizePlanName(customer.currentPlan);
+    const monthlySavings = standardizedPrice - newPlanPrice;
     return {
       isEligible: true,
+      customerInfo: {
+        name: customer.name,
+        storeName: customer.storeName,
+        activationDate: customer.activationDate,
+        secondMRCDate: customer.secondMRCDate,
+        expirationDate: customer.expirationDate,
+        currentPlan: standardizedPlan,
+        monthlySavings,
+        yearlySavings: monthlySavings * 12
+      }
+    };
+  }
+
+  return { isEligible: false };
+};
+
+/**
+ * Gets all customers who are eligible for a promotional offer
+ * @returns An array of eligible customers with their information
+ */
+export const getAllEligibleCustomers = () => {
+  const newPlanPrice = 25; // Set default new plan price
+  
+  return Object.entries(customerData)
+    .map(([phoneNumber, customer]) => {
+      const standardizedPrice = getStandardizedPrice(customer.currentPlan);
+      const standardizedPlan = standardizePlanName(customer.currentPlan);
+      const monthlySavings = standardizedPrice - newPlanPrice;
+      return {
+        phoneNumber,
+        name: customer.name,
+        storeName: customer.storeName,
+        activationDate: customer.activationDate,
+        secondMRCDate: customer.secondMRCDate,
+        currentPlan: standardizedPlan,
+        monthlySavings,
+        yearlySavings: monthlySavings * 12
+      };
+    });
+};
       customerInfo: customer
     };
   }
