@@ -4,12 +4,13 @@ import { getFirestore, enableIndexedDbPersistence } from 'firebase/firestore';
 import { collection, doc, getDoc, updateDoc, getDocs, query, limit } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBgzxVhHPhA3GTGOPrsEBgUV3pBX_lpya4",
-  authDomain: "rbfc25-1189b.firebaseapp.com",
-  projectId: "rbfc25-1189b",
-  storageBucket: "rbfc25-1189b.firebasestorage.app",
-  messagingSenderId: "451852188208",
-  appId: "1:451852188208:web:0ff64b242cddc2400dcbf5"
+  apiKey: "AIzaSyAKt3ELBP9GEEubuL1FDzJoVAhYuANisZw",
+  authDomain: "rbfc25-b9560.firebaseapp.com",
+  projectId: "rbfc25-b9560",
+  storageBucket: "rbfc25-b9560.firebasestorage.app",
+  messagingSenderId: "861239797265",
+  appId: "1:861239797265:web:22ab3e8961e5ce65eb33b0",
+  measurementId: "G-V16HJE3E4E"
 };
 
 // Initialize Firebase only if it hasn't been initialized
